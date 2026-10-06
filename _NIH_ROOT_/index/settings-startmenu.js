@@ -217,6 +217,16 @@ function dfsBuildSettingsBodyHtml() {
       </div>
       <div class="settings-divider"></div>
       <div class="settings-row">
+        <label class="settings-check"><input type="checkbox" id="setFakeRotate"> 가짜 가로 모드 (세로로 고정된 터치 기기)</label>
+        <div class="settings-hint">기본은 켜짐입니다 - 터치 기기에서 화면이 세로로 길면 전체를 시계 방향으로 90° 돌려 가로 화면처럼 씁니다(터치 판정도 같이 돌아감). 기기를 실제로 가로로 돌리면 자동으로 풀립니다.</div>
+      </div>
+      <div class="settings-divider"></div>
+      <div class="settings-row">
+        <label class="settings-check"><input type="checkbox" id="setOskDefault"> 가상 키보드 기본 사용</label>
+        <div class="settings-hint">기본은 켜짐입니다 - 키보드든 패드든 무엇이 연결돼 있든 입력창을 누르면 이 앱의 가상 키보드를 띄우고, 폰 자체의 화면 키보드는 올라오지 않게 막습니다. 끄면 폰 키보드를 막지 않고, 가상 키보드는 게임패드로 조작할 때만 뜹니다.</div>
+      </div>
+      <div class="settings-divider"></div>
+      <div class="settings-row">
         <span class="settings-label">로컬 헬퍼(웹훅)</span>
         <button class="settings-button settings-button-neutral" id="setDownloadHelperBtn">웹훅 받기</button>
         <button class="settings-button" id="setKillHelperBtn">웹훅 종료</button>
@@ -292,6 +302,18 @@ function dfInitSettingsWindow(handle) {
         if (p && p.catch) p.catch(() => {});
       }
     };
+  }
+
+  // 가짜 가로 모드(fake-rotate.js) - 저장소 이름과 무관한 자체 localStorage 키를 쓴다(head에서 가장 먼저 읽어야 해서).
+  if ($("setFakeRotate") && window.FakeRot) {
+    $("setFakeRotate").checked = FakeRot.enabled();
+    $("setFakeRotate").onchange = () => FakeRot.setEnabled($("setFakeRotate").checked);
+  }
+
+  // 가상 키보드 기본 사용(gamepad.js) - 가짜 가로 모드와 같은 이유로 자체 localStorage 키를 쓴다.
+  if ($("setOskDefault") && window.GpOsk) {
+    $("setOskDefault").checked = GpOsk.enabled();
+    $("setOskDefault").onchange = () => GpOsk.setEnabled($("setOskDefault").checked);
   }
 
   if ($("setTheme")) {
